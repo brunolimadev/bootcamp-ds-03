@@ -4,20 +4,14 @@ import "./styles.css";
 
 function App() {
 
-  useEffect( () => {
-    api.get('repositories').then(response => {
-      setRepository(response.data)
-    })
-  } , [])
-
- 
   const [repositories, setRepository] = useState([]);
 
   useEffect( () => {
     api.get('repositories').then(response => {
       setRepository(response.data)
     })
-  } , [repositories])
+  } , [])
+
 
   async function handleAddRepository() {
     // TODO
@@ -31,18 +25,19 @@ function App() {
       const repository = result.data;
 
       setRepository([...repositories, repository]);
+
   }
 
   async function handleRemoveRepository(id) {
     // TODO
-    const result = await api.delete(`repositories/${id}`)
+    await api.delete(`repositories/${id}`)
 
-    const status = result.status
+    const filteredRepositories = repositories.filter(repository => {
+      return repository.id !== id
+    })
+  
+    setRepository([...filteredRepositories]);
 
-    if(status === 204) 
-      setRepository([...repositories])
-    
-    
   }
 
   return (
